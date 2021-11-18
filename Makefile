@@ -17,7 +17,7 @@ define_private_functions:
 
 define_main:
 	for script in $${PRJ_SRC[*]}; do echo -e "#!/usr/bin/env bash\n" > ${TARGET_DIRECTORY}$${script}; echo -e "set -euo pipefail\n" >> ${TARGET_DIRECTORY}$${script}; echo -e "function main() {" >> ${TARGET_DIRECTORY}$${script}; cat "${PRJ_SRC_DIRECTORY}$${script}" | sed '/^function .\+() {/, /^}/d' | sed -r '/^\s*$$/d' | sed -e 's/^/  /g' >> ${TARGET_DIRECTORY}$${script}; echo -e "\n}\n" >> ${TARGET_DIRECTORY}$${script}; done
-	
+
 add_dependencies:
 	for script in $${PRJ_SRC[*]}; do for filename in $${PRJ_LIB[*]}; do cat $${filename} >> ${TARGET_DIRECTORY}$${script}; echo >> ${TARGET_DIRECTORY}$${script}; done ; done
 
@@ -28,7 +28,7 @@ make_target_exec:
 	chmod +x ${TARGET_DIRECTORY}*.sh
 
 ensure_lf_line_endings:
-	for script in $${PRJ_SRC[*]}; do sed 's/\r$$//' ${TARGET_DIRECTORY}$${script}; done
+	for script in $${PRJ_SRC[*]}; do sed -i 's/\r$$//' ${TARGET_DIRECTORY}$${script}; done
 
 archive_target:
-	cd ${TARGET_DIRECTORY}; tar -cvf target.tar . 
+	cd ${TARGET_DIRECTORY}; tar -cvf target.tar .

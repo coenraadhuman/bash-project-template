@@ -124,6 +124,16 @@ function print_foo() {
 main $@
 ```
 
+Running the script:
+
+```bash
+coen@pop-os:~/Documents/bash-project-template$ ./target/script_one.sh 
+foo: foo
+bar: bar
+coen@pop-os:~/Documents/bash-project-template$ echo $?
+0
+```
+
 Resulting file for script_two.sh found in target directory:
 
 ```bash
@@ -155,4 +165,16 @@ function print_foo() {
 }
 
 main $@
+```
+
+Running the script:
+
+```bash
+coen@pop-os:~/Documents/bash-project-template$ ./target/script_two.sh 
+foo: foo
+bar: bar
+Private function only available to this script.
+Private function only available to this script.
+coen@pop-os:~/Documents/bash-project-template$ echo $?
+0
 ```
