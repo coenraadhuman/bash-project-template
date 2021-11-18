@@ -19,6 +19,7 @@ After doing some research I created this template for bash projects which is hea
 ### Features
 
 - Uses Docker to build the scripts, this ensures a consistent build environment.
+- Uses Docker provide an Ubuntu 20.04 run environment with scripts so they can be tested.
 - Add safety options to scripts which will stop execution if a command fails, pipe command fails or trying to use
   undefined variables.
 - Ensures line endings are correct (LF).
@@ -127,11 +128,21 @@ main $@
 Running the script:
 
 ```bash
-coen@pop-os:~/Documents/bash-project-template$ ./target/script_one.sh 
+coen@pop-os:~/Documents/bash-project-template$ ./run.sh 
+Sending build context to Docker daemon  202.8kB
+...
+Successfully built eb2ced143606
+Successfully tagged bash-project-template:runner
+coen@2b6820d6cdf0:/scripts/target$ ls
+script_one.sh  script_two.sh  target.tar
+coen@2b6820d6cdf0:/scripts/target$ ./script_one.sh 
 foo: foo
 bar: bar
-coen@pop-os:~/Documents/bash-project-template$ echo $?
+coen@2b6820d6cdf0:/scripts/target$ echo $?
 0
+coen@2b6820d6cdf0:/scripts/target$ exit
+exit
+coen@pop-os:~/Documents/bash-project-template$ 
 ```
 
 Resulting file for script_two.sh found in target directory:
@@ -170,11 +181,21 @@ main $@
 Running the script:
 
 ```bash
-coen@pop-os:~/Documents/bash-project-template$ ./target/script_two.sh 
+coen@pop-os:~/Documents/bash-project-template$ ./run.sh 
+Sending build context to Docker daemon  202.8kB
+...
+Successfully built eb2ced143606
+Successfully tagged bash-project-template:runner
+coen@3f69bf78c1c9:/scripts/target$ ls
+script_one.sh  script_two.sh  target.tar
+coen@3f69bf78c1c9:/scripts/target$ ./script_two.sh 
 foo: foo
 bar: bar
 Private function only available to this script.
 Private function only available to this script.
-coen@pop-os:~/Documents/bash-project-template$ echo $?
+coen@3f69bf78c1c9:/scripts/target$ echo $?
 0
+coen@3f69bf78c1c9:/scripts/target$ exit 
+exit
+coen@pop-os:~/Documents/bash-project-template$ 
 ```
