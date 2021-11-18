@@ -13,16 +13,16 @@ create_target:
 	if [[ ! -d "./target" ]]; then mkdir target; fi
 
 define_private_functions:
-	for script in $${PRJ_SRC[*]}; do cat "${PRJ_SRC_DIRECTORY}$${script}" | sed -n '/^function .\+() {/, /^}/p' >> ${TARGET_DIRECTORY}$${script}; done
+	for script in $${PRJ_SRC[*]}; do cat "${PRJ_SRC_DIRECTORY}$${script}" | sed -n '/^function .\+() {/, /^}/p' | awk '{ gsub(/^}/,"}\n"); print }' >> ${TARGET_DIRECTORY}$${script}; done
 
 define_main:
-	for script in $${PRJ_SRC[*]}; do echo -e "#!/usr/bin/env bash\n" > ${TARGET_DIRECTORY}$${script}; echo -e "set -euo pipefail\n" >> ${TARGET_DIRECTORY}$${script}; echo -e "function main() {" >> ${TARGET_DIRECTORY}$${script}; cat "${PRJ_SRC_DIRECTORY}$${script}" | sed '/^function .\+() {/, /^}/d' >> ${TARGET_DIRECTORY}$${script}; echo -e "\n}\n" >> ${TARGET_DIRECTORY}$${script}; done
+	for script in $${PRJ_SRC[*]}; do echo -e "#!/usr/bin/env bash\n" > ${TARGET_DIRECTORY}$${script}; echo -e "set -euo pipefail\n" >> ${TARGET_DIRECTORY}$${script}; echo -e "function main() {" >> ${TARGET_DIRECTORY}$${script}; cat "${PRJ_SRC_DIRECTORY}$${script}" | sed '/^function .\+() {/, /^}/d' | sed -r '/^\s*$$/d' | sed -e 's/^/  /g' >> ${TARGET_DIRECTORY}$${script}; echo -e "\n}\n" >> ${TARGET_DIRECTORY}$${script}; done
 	
 add_dependencies:
 	for script in $${PRJ_SRC[*]}; do for filename in $${PRJ_LIB[*]}; do cat $${filename} >> ${TARGET_DIRECTORY}$${script}; echo >> ${TARGET_DIRECTORY}$${script}; done ; done
 
 invoke_main:
-	for script in $${PRJ_SRC[*]}; do echo -e "main \$$@" >> ${TARGET_DIRECTORY}$${script}; done
+	for script in $${PRJ_SRC[*]}; do printf %s "main \$$@" >> ${TARGET_DIRECTORY}$${script}; done
 
 make_target_exec:
 	chmod +x ${TARGET_DIRECTORY}*.sh

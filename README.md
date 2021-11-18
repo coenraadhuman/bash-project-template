@@ -25,7 +25,7 @@ After doing some research I created this template for bash projects which is hea
 - Ensures all scripts are executable.
 - Archives the scripts within target directory for easy distribution.
 - Allows for defining functions once and using them in all scripts.
-- Allows for defining 'private' functions in source scripts.
+- Allows for defining 'private' functions in source scripts. To note: this is achieved using sed and the following start and end patterns `^function .\+() {` and `^}` so it does mean for it to work the programmer needs to adhere to the same style as mine for functions in bash scripts.
 - Allows for building in project directory with spaces or upper-case names, for example: "AN ODD PROJECT NAME" or "PROJECT".
 
 ### Requirements
@@ -47,7 +47,7 @@ ECHO "Windows script still needs to be added."
 
 ### Todo
 
-- [ ] Clean up format of text transformation commands so generated script looks nicer.
+- [X] Clean up format of text transformation commands so generated script looks nicer.
 - [ ] Add build script for Windows.
 - [ ] Ensure user assigned to scripts will work on Windows.
 - [X] Allow for 'private' functions defined in src script.
@@ -60,7 +60,6 @@ __Any script located in [./src](./src) will be made with its own entrypoint:__
 Script #1 [./src/script_one.sh](./src/script_one.sh):
 
 ```bash
-echo "This is script one"
 print_foo "foo"
 print_bar "bar"
 ```
@@ -68,9 +67,18 @@ print_bar "bar"
 Script #2 [./src/script_two.sh](./src/script_two.sh):
 
 ```bash
-echo "This is script two"
+function private_print() {
+  echo "Private function only available to this script."
+} 
+
+function private_print_two() {
+  echo "Private function only available to this script."
+} 
+
 print_foo "foo"
 print_bar "bar"
+private_print
+private_print_two
 ```
 
 __Any script found in [./lib](./lib) act as modules and are intended for sharable functions:__
@@ -101,8 +109,8 @@ Resulting file for script_one.sh found in target directory:
 set -euo pipefail
 
 function main() {
-print_foo "foo"
-print_bar "bar"
+  print_foo "foo"
+  print_bar "bar"
 }
 
 function print_bar() {
@@ -114,7 +122,6 @@ function print_foo() {
 }
 
 main $@
-
 ```
 
 Resulting file for script_two.sh found in target directory:
@@ -125,20 +132,20 @@ Resulting file for script_two.sh found in target directory:
 set -euo pipefail
 
 function main() {
-
-
-print_foo "foo"
-print_bar "bar"
-private_print
-private_print_two
+  print_foo "foo"
+  print_bar "bar"
+  private_print
+  private_print_two
 }
 
 function private_print() {
   echo "Private function only available to this script."
-} 
+}
+ 
 function private_print_two() {
   echo "Private function only available to this script."
-} 
+}
+ 
 function print_bar() {
   echo "bar: $1"
 }
@@ -148,5 +155,4 @@ function print_foo() {
 }
 
 main $@
-
 ```
