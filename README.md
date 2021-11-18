@@ -45,7 +45,7 @@ ECHO "Windows script still needs to be added."
 
 ### Todo
 
-- Allow for 'private' functions defined in src script.
+- Clean up format of text transformation commands so generated script looks nicer.
 - Add build script for Windows.
 - Ensure auto-detected Docker name from root directory is lower-case.
 
@@ -97,9 +97,8 @@ Resulting file for script_one.sh found in target directory:
 set -euo pipefail
 
 function main() {
-  echo "This is script one"
-  print_foo "foo"
-  print_bar "bar"
+print_foo "foo"
+print_bar "bar"
 }
 
 function print_bar() {
@@ -110,8 +109,8 @@ function print_foo() {
   echo "foo: $1"
 }
 
-
 main $@
+
 ```
 
 Resulting file for script_two.sh found in target directory:
@@ -122,11 +121,20 @@ Resulting file for script_two.sh found in target directory:
 set -euo pipefail
 
 function main() {
-  echo "This is script two"
-  print_foo "foo"
-  print_bar "bar"
+
+
+print_foo "foo"
+print_bar "bar"
+private_print
+private_print_two
 }
 
+function private_print() {
+  echo "Private function only available to this script."
+} 
+function private_print_two() {
+  echo "Private function only available to this script."
+} 
 function print_bar() {
   echo "bar: $1"
 }
@@ -135,6 +143,6 @@ function print_foo() {
   echo "foo: $1"
 }
 
-
 main $@
+
 ```
