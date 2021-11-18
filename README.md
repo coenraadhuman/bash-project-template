@@ -3,7 +3,7 @@
 
 # bash-project-template
 
-This is a template for bash projects. It utilises make and Docker to create safer bash scripts with DRY principle.
+This is a template for bash projects. It utilises make and docker to create safer bash scripts with additional features.
 
 ### Motivation
 
@@ -25,6 +25,8 @@ After doing some research I created this template for bash projects which is hea
 - Ensures all scripts are executable.
 - Archives the scripts within target directory for easy distribution.
 - Allows for defining functions once and using them in all scripts.
+- Allows for defining 'private' functions in source scripts.
+- Allows for building in project directory with spaces or upper-case names, for example: "AN ODD PROJECT NAME" or "PROJECT".
 
 ### Requirements
 
@@ -45,9 +47,11 @@ ECHO "Windows script still needs to be added."
 
 ### Todo
 
-- Clean up format of text transformation commands so generated script looks nicer.
-- Add build script for Windows.
-- Ensure auto-detected Docker name from root directory is lower-case.
+- [ ] Clean up format of text transformation commands so generated script looks nicer.
+- [ ] Add build script for Windows.
+- [ ] Ensure user assigned to scripts will work on Windows.
+- [X] Allow for 'private' functions defined in src script.
+- [X] Ensure auto-detected Docker name from root directory is lower-case and one word.
 
 ### Inner Workings of the Template
 
